@@ -44,6 +44,19 @@ struct symbol_description {
   static std::vector<pin> parse_output_pin(const std::string &line);
   static std::vector<pin_with_default> parse_state_pin(const std::string &line);
   static pin parse_pin_def(const std::string &str);
+  static pin_with_default
+  parse_pin_with_default_def(const std::string &str,
+                             const std::string &init_str);
+  static pin_interface_clause
+  parse_pin_interface_clause(const std::string &str,
+                             const std::string &rhs_str);
+  static std::tuple<std::string, std::size_t, std::size_t>
+  parse_pin_assign_clause_one_side(const std::string &str);
+  static logic_clause parse_logic_clause(const std::string &line);
+  static std::vector<pin_interface_clause>
+  parse_output_assign_clause(const std::string &line);
+  static std::vector<pin_interface_clause>
+  parse_state_assign_clause(const std::string &line);
 };
 
 } // namespace contras
