@@ -1,11 +1,13 @@
 #include "pin.hpp"
+#include "symbol_description.hpp"
 #include <iostream>
 
 int main() {
   contras::use_logger();
   __CONTRAS_LOG(debug, "Hello, world");
   try {
-    __CONTRAS_THROW(contras::exception_type::invalid_argument, "Compile error");
+    contras::symbol_description::parse_input_pin("INPUT aa[63:0], bb, cc");
+
   } catch (const contras::exception &err) {
     std::cout << err.message() << std::endl;
   }

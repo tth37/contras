@@ -5,8 +5,22 @@
 #include <string>
 #include <vector>
 
+namespace contras {
+
 struct import_clause {
   std::string alias, file_name;
+};
+
+struct pin_interface_clause {
+  bool init_by_string;
+  std::string name, rhs_name;
+  pin_assign_clause clause;
+  std::string init_str;
+};
+
+struct logic_clause {
+  std::string symbol_name;
+  std::vector<pin_interface_clause> input_pins, output_pins;
 };
 
 struct symbol_description {
@@ -14,8 +28,24 @@ struct symbol_description {
   std::vector<import_clause> import_clauses;
   // @Head
   std::string symbol_name;
-  std::vector<contras::pin> input_pins, output_pins;
-  std::vector<contras::pin> state_pins;
+  std::vector<pin> input_pins, output_pins;
+  std::vector<pin_with_default> state_pins;
+  // @Body
+  std::vector<logic_clause> logic_clauses;
+  // @End
+  std::vector<pin_interface_clause> output_assign_clauses, state_assign_clauses;
+
+  static std::shared_ptr<symbol_description>
+  parse_symbol_description(const std::string &file_name);
+
+  static import_clause parse_import_clause(const std::string &line);
+  static std::string parse_symbol_name(const std::string &line);
+  static std::vector<pin> parse_input_pin(const std::string &line);
+  static std::vector<pin> parse_output_pin(const std::string &line);
+  static std::vector<pin_with_default> parse_state_pin(const std::string &line);
+  static pin parse_pin_def(const std::string &str);
 };
+
+} // namespace contras
 
 #endif // CONTRAS_SYMBOL_DESCRIPTION_HPP
