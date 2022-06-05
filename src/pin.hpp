@@ -16,8 +16,8 @@ struct pin {
   std::size_t length;
   std::bitset<64> value, initialized;
 
-  pin(std::string name, std::size_t length)
-      : name(std::move(name)), length(length) {
+  pin(std::string name_, std::size_t length_)
+      : name(std::move(name_)), length(length_) {
     if (length > 64) {
       __CONTRAS_THROW(exception_type::invalid_argument,
                       "Pin length must be less than 64");
@@ -72,16 +72,27 @@ struct pin {
   void assign_value(const pin &rhs, const pin_assign_clause &clause) {
     validate_assign_clause(rhs, clause);
     bool used_uninitialized_value = false;
-//    for (std::size_t i = clause.r; i >= clause.l; --i) {
-//      value[i] = rhs.value[clause.rhs_r];
-//      if (!rhs.initialized[clause.rhs_r]) {
-//        used_uninitialized_value = true;
-//      }
-//      initialized[i] = true;
-//    }
+    //    for (std::size_t i = clause.r; i >= clause.l; --i) {
+    //      value[i] = rhs.value[clause.rhs_r];
+    //      if (!rhs.initialized[clause.rhs_r]) {
+    //        used_uninitialized_value = true;
+    //      }
+    //      initialized[i] = true;
+    //    }
     if (used_uninitialized_value) {
       __CONTRAS_LOG(warn, "Use of uninitialized value in PIN assign clause");
     }
+  }
+};
+
+struct pin_with_default : public pin {
+  std::string default_value;
+
+  pin_with_default(std::string name_, std::size_t length_,
+                   std::string default_value_)
+      : pin(std::move(name_), length_),
+        default_value(std::move(default_value_)) {
+    validate_initialize_str(default_value);
   }
 };
 
