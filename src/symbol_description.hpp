@@ -20,12 +20,4 @@ struct symbol_description {
 std::shared_ptr<symbol_description>
 parse_symbol_description(const std::string &file_name);
 
-// .cdl 源文件
-// 不做类型检查，只做语法检查
-// 1. symbol_description
-// 做类型检查
-// 2. symbol_definition
-// 实例化
-// 3. symbol_instance
-
 #endif // CONTRAS_SYMBOL_DESCRIPTION_HPP
