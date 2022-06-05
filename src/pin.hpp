@@ -22,10 +22,18 @@ struct pin {
   void validate_assign_clause(const pin &rhs,
                               const pin_assign_clause &clause) const;
   void assign_value(const pin &rhs, const pin_assign_clause &clause);
+
+
+
+
+
   void validate_assign_from_string(const std::string &str,
-                                   const pin_assign_clause &clause) const;
+                                   const pin_assign_clause &clause) const;//havent been defined
   void assign_value_from_string(const std::string &str,
-                                const pin_assign_clause &clause);
+                                const pin_assign_clause &clause);//havent been defined
+
+
+
 };
 
 struct pin_with_default : public pin {
