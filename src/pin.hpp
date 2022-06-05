@@ -1,0 +1,90 @@
+#ifndef CONTRAS_PIN_HPP
+#define CONTRAS_PIN_HPP
+
+#include "utils/exception.hpp"
+#include <bitset>
+#include <string>
+
+namespace contras {
+
+struct pin_assign_clause {
+  std::size_t r, l, rhs_r, rhs_l;
+};
+
+struct pin {
+  std::string name;
+  std::size_t length;
+  std::bitset<64> value, initialized;
+
+  pin(std::string name, std::size_t length)
+      : name(std::move(name)), length(length) {
+    if (length > 64) {
+      __CONTRAS_THROW(exception_type::invalid_argument,
+                      "Pin length must be less than 64");
+    }
+  }
+
+  void validate_initialize_str(const std::string &str) const {
+    if (str.length() != 1 && str.length() != length) {
+      __CONTRAS_THROW(exception_type::invalid_argument,
+                      "Invalid PIN initialize string");
+    }
+    for (auto c : str) {
+      if (c != '0' && c != '1') {
+        __CONTRAS_THROW(exception_type::invalid_argument,
+                        "Invalid PIN initialize string");
+      }
+    }
+  }
+
+  void initialize(const std::string &str) {
+    validate_initialize_str(str);
+    if (str.length() == 1) {
+      for (std::size_t i = 0; i < length; ++i) {
+        value[i] = str[0] == '1';
+        initialized[i] = true;
+      }
+    } else {
+      for (std::size_t i = 0; i < length; ++i) {
+        value[i] = str[i] == '1';
+        initialized[i] = true;
+      }
+    }
+  }
+
+  void validate_assign_clause(const pin &rhs,
+                              const pin_assign_clause &clause) const {
+    if (clause.r >= length || clause.rhs_r >= rhs.length || clause.l < 0 ||
+        clause.rhs_l < 0) {
+      __CONTRAS_THROW(exception_type::invalid_argument,
+                      "Invalid PIN assign clause");
+    }
+    if (clause.l > clause.r || clause.rhs_l > clause.rhs_r) {
+      __CONTRAS_THROW(exception_type::invalid_argument,
+                      "Invalid PIN assign clause");
+    }
+    if (clause.r - clause.l != clause.rhs_r - clause.rhs_l) {
+      __CONTRAS_THROW(exception_type::invalid_argument,
+                      "Invalid PIN assign clause");
+    }
+  }
+
+  void assign_value(const pin &rhs, const pin_assign_clause &clause) {
+    validate_assign_clause(rhs, clause);
+    bool used_uninitialized_value = false;
+//    for (std::size_t i = clause.r; i >= clause.l; --i) {
+//      value[i] = rhs.value[clause.rhs_r];
+//      if (!rhs.initialized[clause.rhs_r]) {
+//        used_uninitialized_value = true;
+//      }
+//      initialized[i] = true;
+//    }
+    if (used_uninitialized_value) {
+      __CONTRAS_LOG(warn, "Use of uninitialized value in PIN assign clause");
+    }
+  }
+};
+
+} // namespace contras
+
+#endif // CONTRAS_PIN_HPP
