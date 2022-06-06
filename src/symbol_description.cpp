@@ -64,6 +64,12 @@ contras::symbol_description::parse_symbol_description(
                              state_pins.end());
       continue;
     }
+    if (line.find("SYMBOL") == 0) {
+      auto symbol_instances = parse_symbol_instances(line);
+      res->instances.insert(res->instances.end(), symbol_instances.begin(),
+                            symbol_instances.end());
+      continue;
+    }
     __CONTRAS_THROW(exception_type::syntax_error,
                     "Unexpected line [" + line + "]");
   }
@@ -141,7 +147,6 @@ contras::symbol_description::parse_symbol_name(const std::string &line) {
                     "Invalid symbol name [" + line + "]");
   }
   res = match[1];
-  __CONTRAS_LOG(debug, "Symbol name: " + res);
   return res;
 }
 
@@ -166,8 +171,6 @@ contras::symbol_description::parse_input_pin(const std::string &line) {
   ss >> token;
   while (ss >> token) {
     auto pin = parse_pin_def(token);
-    __CONTRAS_LOG(debug, "Input pin: " + pin.name);
-    __CONTRAS_LOG(debug, "Input pin length: " + std::to_string(pin.length));
     res.push_back(pin);
   }
 
@@ -195,8 +198,6 @@ contras::symbol_description::parse_output_pin(const std::string &line) {
   ss >> token;
   while (ss >> token) {
     auto pin = parse_pin_def(token);
-    __CONTRAS_LOG(debug, "Output pin: " + pin.name);
-    __CONTRAS_LOG(debug, "Output pin length: " + std::to_string(pin.length));
     res.push_back(pin);
   }
 
@@ -275,10 +276,33 @@ contras::symbol_description::parse_state_pin(const std::string &line) {
   while (ss >> token) {
     ss >> init_str;
     auto pin = parse_pin_with_default_def(token, init_str);
-    __CONTRAS_LOG(debug, "State pin: " + pin.name);
-    __CONTRAS_LOG(debug, "State pin length: " + std::to_string(pin.length));
-    __CONTRAS_LOG(debug, "State pin default value: " + pin.default_value);
     res.push_back(pin);
+  }
+  return res;
+}
+
+std::vector<contras::symbol_instance>
+contras::symbol_description::parse_symbol_instances(const std::string &line) {
+  std::vector<symbol_instance> res;
+  // regex: SYMBOL\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9]+(\s*\,\s*[a-zA-Z0-9]+\s*)*\s*
+  std::regex re(
+      R"(SYMBOL\s+([a-zA-Z0-9]+)\s+([a-zA-Z0-9]+(\s*\,\s*[a-zA-Z0-9]+\s*)*)\s*)");
+  std::smatch match;
+  if (!std::regex_match(line, match, re)) {
+    __CONTRAS_THROW(exception_type::invalid_argument,
+                    "Invalid symbol instance [" + line + "]");
+  }
+  auto processed_line = line;
+  // replace ',' to ' ' in line
+  while (processed_line.find(',') != std::string::npos) {
+    processed_line.replace(processed_line.find(','), 1, " ");
+  }
+  std::stringstream ss(processed_line);
+  std::string token, symbol_name;
+  ss >> token;
+  ss >> symbol_name;
+  while (ss >> token) {
+    res.push_back(symbol_instance{symbol_name, token});
   }
   return res;
 }
@@ -297,12 +321,6 @@ contras::symbol_description::parse_pin_interface_clause(
     res.name = pin_name;
     res.clause.r = pin_r;
     res.clause.l = pin_l;
-    __CONTRAS_LOG(debug, "Pin interface clause: " + res.name);
-    __CONTRAS_LOG(debug, "Pin interface clause right pos: " +
-                             std::to_string(res.clause.r));
-    __CONTRAS_LOG(debug, "Pin interface clause left pos: " +
-                             std::to_string(res.clause.l));
-    __CONTRAS_LOG(debug, "Pin interface clause init value: " + res.init_str);
     return res;
   } else {
     res.init_by_string = false;
@@ -413,27 +431,17 @@ contras::symbol_description::parse_logic_clause(const std::string &line) {
   std::string token, assign_str;
   std::stringstream ss1(part1);
   ss1 >> token;
-  res.symbol_name = token;
+  res.instance_name = token;
   while (ss1 >> token) {
     ss1 >> assign_str;
     auto pin_interface_clause = parse_pin_interface_clause(token, assign_str);
     res.input_pins.push_back(pin_interface_clause);
-    __CONTRAS_LOG(
-        debug,
-        "Input pin: " + pin_interface_clause.name +
-            " Right pos: " + std::to_string(pin_interface_clause.clause.r) +
-            " Left pos: " + std::to_string(pin_interface_clause.clause.l));
   }
   std::stringstream ss2(part2);
-  while (ss2 >> token) {
-    ss2 >> assign_str;
+  while (ss2 >> assign_str) {
+    ss2 >> token;
     auto pin_interface_clause = parse_pin_interface_clause(token, assign_str);
     res.output_pins.push_back(pin_interface_clause);
-    __CONTRAS_LOG(
-        debug,
-        "Output pin: " + pin_interface_clause.name +
-            " Right pos: " + std::to_string(pin_interface_clause.clause.r) +
-            " Left pos: " + std::to_string(pin_interface_clause.clause.l));
   }
   return res;
 }
@@ -469,11 +477,6 @@ contras::symbol_description::parse_output_assign_clause(
     ss >> assign_str;
     auto pin_interface_clause = parse_pin_interface_clause(token, assign_str);
     res.push_back(pin_interface_clause);
-    __CONTRAS_LOG(
-        debug,
-        "Output pin: " + pin_interface_clause.name +
-            " Right pos: " + std::to_string(pin_interface_clause.clause.r) +
-            " Left pos: " + std::to_string(pin_interface_clause.clause.l));
   }
   return res;
 }
@@ -509,11 +512,6 @@ contras::symbol_description::parse_state_assign_clause(
     ss >> assign_str;
     auto pin_interface_clause = parse_pin_interface_clause(token, assign_str);
     res.push_back(pin_interface_clause);
-    __CONTRAS_LOG(
-        debug,
-        "State pin: " + pin_interface_clause.name +
-            " Right pos: " + std::to_string(pin_interface_clause.clause.r) +
-            " Left pos: " + std::to_string(pin_interface_clause.clause.l));
   }
   return res;
 }

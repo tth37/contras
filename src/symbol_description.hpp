@@ -19,8 +19,12 @@ struct pin_interface_clause {
 };
 
 struct logic_clause {
-  std::string symbol_name;
+  std::string instance_name;
   std::vector<pin_interface_clause> input_pins, output_pins;
+};
+
+struct symbol_instance {
+  std::string symbol_name, instance_name;
 };
 
 struct symbol_description {
@@ -30,6 +34,7 @@ struct symbol_description {
   std::string symbol_name;
   std::vector<pin> input_pins, output_pins;
   std::vector<pin_with_default> state_pins;
+  std::vector<symbol_instance> instances;
   // @Body
   std::vector<logic_clause> logic_clauses;
   // @End
@@ -43,6 +48,8 @@ struct symbol_description {
   static std::vector<pin> parse_input_pin(const std::string &line);
   static std::vector<pin> parse_output_pin(const std::string &line);
   static std::vector<pin_with_default> parse_state_pin(const std::string &line);
+  static std::vector<symbol_instance>
+  parse_symbol_instances(const std::string &line);
   static pin parse_pin_def(const std::string &str);
   static pin_with_default
   parse_pin_with_default_def(const std::string &str,
