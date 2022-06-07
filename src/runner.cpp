@@ -29,3 +29,5 @@ void contras::runner::run_single_test_case(
     }
   }
 }
+
+void contras::runner::write_output_file() { cases->print_result(); }

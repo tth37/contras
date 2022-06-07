@@ -13,6 +13,7 @@ public:
          std::shared_ptr<test_case> cases_);
   void run();
   void run_single_test_case(single_test_case &test_case);
+  void write_output_file();
 
 private:
   std::shared_ptr<test_case> cases;
