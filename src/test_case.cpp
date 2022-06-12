@@ -2,7 +2,7 @@
 #include "utils/exception.hpp"
 #include <fstream>
 #include <regex>
-
+#include <iomanip>
 #include <iostream>
 
 std::shared_ptr<contras::test_case>
@@ -130,10 +130,8 @@ contras::test_case::parse_test_case(const std::string &file_name,
 }
 
 void print_io_sequence(contras::boolean_sequence io_seq,
-                       std::fstream &outfile) { // assitence func TODO
-  outfile << io_seq.pin_name;
-  if (io_seq.pos)
-    outfile << '[' << io_seq.pos << ']';
+                       std::fstream &outfile, std::size_t width) { 
+  outfile << std::setw(width) << io_seq.pin_name + "[" + std::to_string(io_seq.pos) + "]";
   outfile << " = ";
   for (const auto &ch : io_seq.value) {
     if (ch == true)
@@ -154,11 +152,20 @@ void contras::test_case::print_result() const {
 
   for (const auto &singleCase : test_cases) {
     out_File << "@Case" << std::endl;
+    std::size_t width = 0;
     for (const auto &inputSeq : singleCase.input_sequences) {
-      print_io_sequence(inputSeq, out_File);
+      auto str = inputSeq.pin_name + "[" + std::to_string(inputSeq.pos) + "]";
+      if (str.length() > width) width = str.length();
     }
     for (const auto &outputSeq : singleCase.output_sequences) {
-      print_io_sequence(outputSeq, out_File);
+      auto str = outputSeq.pin_name + "[" + std::to_string(outputSeq.pos) + "]";
+      if (str.length() > width) width = str.length();
+    }
+    for (const auto &inputSeq : singleCase.input_sequences) {
+      print_io_sequence(inputSeq, out_File, width);
+    }
+    for (const auto &outputSeq : singleCase.output_sequences) {
+      print_io_sequence(outputSeq, out_File, width);
     }
   }
 

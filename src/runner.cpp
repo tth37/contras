@@ -22,10 +22,9 @@ void contras::runner::run_single_test_case(
                                       input.value[i] == 1 ? "1" : "0");
     }
     inst->execute();
+    inst->execute();
     for (auto &output : test_case.output_sequences) {
       output.value[i] = inst->get_output_pin(output.pin_name).value[output.pos];
-      std::cout << output.pin_name << " [" << output.pos
-                << "] = " << output.value[i] << std::endl;
     }
   }
 }
