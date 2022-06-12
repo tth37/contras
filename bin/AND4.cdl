@@ -1,0 +1,11 @@
+import AND from "AND.cdl"
+@Head
+INPUT a[3:0]
+OUTPUT out
+SYMBOL AND AND1, AND2, AND3
+@Body
+AND1(a = a[0], b = a[1]) => (out = a01)
+AND2(a = a[2], b = a[3]) => (out = a23)
+AND3(a = a01, b = a23) => (out = a0123)
+@End
+OUTPUT out = a0123

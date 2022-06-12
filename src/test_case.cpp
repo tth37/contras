@@ -45,12 +45,18 @@ contras::test_case::parse_test_case(const std::string &file_name,
     std::smatch match_res;
 
     if (std::regex_match(one_line, bool_sentence)) { // is input sequence
-      // now get the 01sequence
-      std::regex_search(one_line, match_res,
-                        only_one_and_zero_str); // get with the format like : '[
-                                                // space ][ n* 0/1 ][ space ]'
 
-      std::string bool_seq = match_res[match_res.size() - 1];
+            std::vector<std::string> nums_in_sequence;
+            std::string tempStr = one_line;
+            while (regex_search(tempStr,match_res,only_one_and_zero_str)) {
+                nums_in_sequence.push_back(match_res.str(0));
+                tempStr = match_res.suffix().str();
+            }
+
+
+      // now get the 01sequence
+
+      std::string bool_seq = nums_in_sequence.back();
 
       // length judgement
       if (previousLength == 0) {
@@ -98,7 +104,7 @@ contras::test_case::parse_test_case(const std::string &file_name,
       if (std::regex_search(one_line, match_res, match_pin_pos)) {
         one_bool_sequence.pos = std::stoi(match_res[0].str());
       } else {
-        one_bool_sequence.pos = NULL;
+        one_bool_sequence.pos = 0;//TODO modified fron null to 0
       }
       // now the one_bool_sequence of the current line is done and we push it
       // into "one_test_case.output_sequences"
