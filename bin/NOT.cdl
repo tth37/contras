@@ -1,0 +1,9 @@
+@Head
+NAME NOT
+INPUT a
+OUTPUT out
+SYMBOL NAND NAND1
+@Body
+NAND1(a = a, b = a) => (out = na)
+@End
+OUTPUT out = na

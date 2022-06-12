@@ -4,3 +4,6 @@ build
 .vscode
 .vs
 out
+bin/*.exe
+bin/*.pdb
+bin/*.ilk

@@ -1,0 +1,12 @@
+import NOT from "NOT.cdl"
+@Head
+NAME AND
+INPUT a, b
+OUTPUT out
+SYMBOL NAND NAND1
+SYMBOL NOT NOT1
+@Body
+NAND1(a = a, b = b) => (out = nab)
+NOT1(a = nab) => (out = ab)
+@End
+OUTPUT out = ab
