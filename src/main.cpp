@@ -5,6 +5,7 @@
 #include "test_case.hpp"
 #include "utils/exception.hpp"
 #include <iostream>
+#include "test_case.hpp"
 
 int main(int argc, char *argv[]) {
   contras::use_logger();

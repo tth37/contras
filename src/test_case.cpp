@@ -8,14 +8,19 @@
 
 std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const std::string &file_name, const std::string &output_file_name){
     auto res = std::make_shared<test_case>();
+    res->output_file_name = output_file_name;
 
     std::regex case_start("@Case");
     std::regex case_end("@End");
     std::regex bool_sentence("[a-zA-Z0-9\[\]]+\s*\=\s*[01]+\s*");
     std::regex question_mark_sentence("[a-zA-Z0-9\[\]]+\s*\=\s*\?\s*");
     std::regex only_one_and_zero_str("\s*[01]+\s*");
-    std::regex match_pin_name("[a-zA-Z0-9]");
-    std::regex match_pin_pos("\[[0-9]*\]");
+    std::regex match_pin_name("[a-zA-Z0-9]+");
+    std::regex match_pin_pos("\[[0-9]+\]");
+
+
+
+
 
     std::ifstream inFile;
     inFile.open(file_name);
@@ -52,7 +57,7 @@ std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const st
                     __CONTRAS_THROW(contras::exception_type::syntax_error,"input sequences' lengths are not equal!")
 
 
-            for(const auto& ch:match_res[0].str()){    //store the one_zero_string into vector "one_bool_sequence.value"
+            for(auto& ch:match_res[0].str()){    //store the one_zero_string into vector "one_bool_sequence.value"
                 if(ch==' ')
                     continue;
                 else{
@@ -75,7 +80,7 @@ std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const st
                 one_bool_sequence.pos = std::stoi(match_res[0].str());
             }
             else{
-                one_bool_sequence.pos = NULL;
+                one_bool_sequence.pos = 0;
             }
 
             //now the one_bool_sequence of the current line is done and we push it into "one_test_case.input_sequences"
@@ -101,34 +106,46 @@ std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const st
 
 
     inFile.close();
+
     return res;
 }
 
 
-void print_io_sequence(contras::boolean_sequence io_seq){   //assitence func
-    std::cout << io_seq.pin_name;
-    if(io_seq.pos!=NULL)
-        std::cout << '['<<io_seq.pos<<']';
-    std::cout << " = ";
+
+
+
+
+void print_io_sequence(contras::boolean_sequence io_seq,std::fstream &outfile){   //assitence func TODO
+    outfile << io_seq.pin_name;
+    if(io_seq.pos)
+        outfile << '['<<io_seq.pos<<']';
+    outfile << " = ";
     for(const auto& ch:io_seq.value){
         if(ch==true)
-            std::cout<<1;
+            outfile<<1;
         else
-            std::cout<<0;
+            outfile<<0;
     }
-    std::cout<<std::endl;
+    outfile<<std::endl;
 }
 
 
 void contras::test_case::print_result() const{
     //loop through every single_test_casein test_cases
     //for every single_test_case,loop through input_sequences and output_sequences;
+
+    std::fstream out_File;
+    out_File.open(output_file_name,std::ios::out);
+
+
     for(const auto & singleCase:test_cases){
         for(const auto& inputSeq:singleCase.input_sequences){
-            print_io_sequence(inputSeq);
+            print_io_sequence(inputSeq,out_File);
         }
         for(const auto& outputSeq:singleCase.output_sequences){
-            print_io_sequence(outputSeq);
+            print_io_sequence(outputSeq,out_File);
         }
     }
+
+    out_File.close();
 }
