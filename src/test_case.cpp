@@ -7,6 +7,7 @@
 
 
 std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const std::string &file_name, const std::string &output_file_name){
+    auto res = std::make_shared<test_case>();
 
     std::regex case_start("@Case");
     std::regex case_end("@End");
@@ -30,7 +31,7 @@ std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const st
             continue;
         }
         else if(std::regex_search(one_line,case_end)){  //@End
-            contras::test_case::test_cases.push_back(one_test_case);//TODO to be modified...
+            res->test_cases.push_back(one_test_case);//TODO to be modified...
             continue;
         }
 
@@ -100,6 +101,7 @@ std::shared_ptr<contras::test_case> contras::test_case::parse_test_case(const st
 
 
     inFile.close();
+    return res;
 }
 
 
