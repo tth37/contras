@@ -1,9 +1,11 @@
 #include "compiler.hpp"
+#include <iostream>
 #include <queue>
 
 void contras::compiler::dfs_build_description_tree(
     const std::string &file_name) {
-  __CONTRAS_LOG(debug, "Parsing file: " + file_name);
+  std::cout << "[1/4] Building symbol_description object " + file_name
+            << std::endl;
   auto desc = symbol_description::parse_symbol_description(file_name);
   auto desc_node = std::make_shared<description_node>();
   desc_node->desc = desc;
@@ -68,6 +70,8 @@ void contras::compiler::build_definition_map() {
   definition_map["NAND"] = symbol_definition::parse_NAND_definition();
   for (const auto &desc : sorted_desc) {
     auto def = symbol_definition::parse_symbol_definition(desc, definition_map);
+    std::cout << "[2/4] Building symbol_definition object " + def->symbol_name
+              << std::endl;
     definition_map[def->symbol_name] = def;
   }
 }

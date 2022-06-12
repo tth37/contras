@@ -1,4 +1,5 @@
 @Head
+NAME RSFlipFlop
 INPUT R, S
 OUTPUT Q, NQ
 STATE SQ = 0, SNQ = 1
