@@ -5,7 +5,6 @@
 #include "test_case.hpp"
 #include "utils/exception.hpp"
 #include <iostream>
-#include "test_case.hpp"
 
 int main(int argc, char *argv[]) {
   contras::use_logger();
@@ -32,6 +31,7 @@ int main(int argc, char *argv[]) {
     auto runner = std::make_shared<contras::runner>(
         [&]() { return compiler->build_runtime_instance(); }, test_case);
     runner->run();
+    __CONTRAS_LOG(info, "Finish running, write output to file...");
     runner->write_output_file();
   } catch (const contras::exception &e) {
     __CONTRAS_LOG(error, "Runtime error!");
