@@ -7,3 +7,11 @@
 [Git](https://git-scm.com/)
 
 [CMake](https://cmake.org/)
+
+```shell
+mkdir build
+cd build
+cmake .. -G Ninja -DCONTRAS_USE_LOGGER=true
+cmake --build .
+cd ../bin
+```
