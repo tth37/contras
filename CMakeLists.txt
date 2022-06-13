@@ -8,4 +8,8 @@ file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 add_executable(contras ${SRC_FILES})
 
+if (CONTRAS_USE_LOGGER)
+  message(STATUS "Using logger")
+  target_compile_definitions(contras PUBLIC CONTRAS_USE_LOGGER)
+endif()
 

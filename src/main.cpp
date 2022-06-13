@@ -5,9 +5,12 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-  // contras::use_logger();
+#ifdef CONTRAS_USE_LOGGER
+  contras::use_logger();
+#endif
+  __CONTRAS_LOG(info, "Starting contras...");
   if (argc != 4) {
-    std::cerr << "Usage: " << argv[0] << " <cdl_file> <test_file> <output_file>"
+    std::cerr << "Usage: contras <cdl_file> <test_file> <output_file>"
               << std::endl;
     return 1;
   }
