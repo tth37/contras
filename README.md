@@ -15,3 +15,4 @@ cmake .. -G Ninja -DCONTRAS_USE_LOGGER=true
 cmake --build .
 cd ../bin
 ```
+hello
