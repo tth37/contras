@@ -11,12 +11,19 @@ void contras::compiler::dfs_build_description_tree(
   desc_node->desc = desc;
   desc_node->file_name = desc->file_name;
   desc_node->symbol_name = desc->symbol_name;
+  if (desc->symbol_name == "") {
+    __CONTRAS_THROW(exception_type::invalid_argument, "Symbol name of [" + desc->file_name + "] is empty");
+  }
   if (symbol_name_set.find(desc->symbol_name) != symbol_name_set.end()) {
-    __CONTRAS_THROW(exception_type::invalid_argument, "Duplicate symbol name");
+    __CONTRAS_THROW(exception_type::invalid_argument, "Symbol name [" +
+                                                           desc->symbol_name +
+                                                           "] already exists");
   }
   symbol_name_set.insert(desc->symbol_name);
   if (file_name_set.find(desc->file_name) != file_name_set.end()) {
-    __CONTRAS_THROW(exception_type::invalid_argument, "Duplicate file name");
+    __CONTRAS_THROW(exception_type::invalid_argument, "File name [" +
+                                                           desc->file_name +
+                                                           "] already exists");
   }
   file_name_set.insert(desc->file_name);
   if (description_nodes.empty()) {
@@ -32,7 +39,8 @@ void contras::compiler::dfs_build_description_tree(
     dfs_build_description_tree(child_file_name);
     if (description_nodes.find(child_symbol_name) == description_nodes.end()) {
       __CONTRAS_THROW(exception_type::invalid_argument,
-                      "Invalid import clause");
+                      "Child symbol_name [" + child_symbol_name + "] not found when parsing [" +
+                          desc->symbol_name + "]");
     }
     auto child_desc_node = description_nodes[child_symbol_name];
     desc_node->children.push_back(child_desc_node);

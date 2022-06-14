@@ -283,7 +283,8 @@ contras::pin contras::symbol_definition::get_input_pin_from_def(
       return pin;
     }
   }
-  __CONTRAS_THROW(exception_type::invalid_argument, "input_pin name not found");
+  __CONTRAS_THROW(exception_type::invalid_argument, "input_pin name ["
+                                                     + pin_name + "] of symbol [" + def->symbol_name + "] not found");
 }
 
 contras::pin contras::symbol_definition::get_src_pin_from_map(

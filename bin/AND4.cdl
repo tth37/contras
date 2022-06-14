@@ -1,5 +1,6 @@
 import AND from "AND.cdl"
 @Head
+NAME AND4
 INPUT a[3:0]
 OUTPUT out
 SYMBOL AND AND1, AND2, AND3
