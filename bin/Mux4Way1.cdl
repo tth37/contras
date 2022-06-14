@@ -1,0 +1,29 @@
+import AND4 from "AND4.cdl"
+import NOT from "NOT.cdl"
+import AND from "AND.cdl"
+@Head
+NAME Mux4Way1
+INPUT a, b
+INPUT D0, D1, D2, D3
+OUTPUT W, NW
+SYMBOL AND AND1, AND2, AND3, AND4
+SYMBOL AND4 AND41
+SYMBOL NAND NAND1, NAND2, NAND3, NAND4
+SYMBOL NOT NOT1, NOT2, NOT3
+
+@Body
+NOT1(a=a)=>(out=na)
+NOT2(a=b)=>(out=nb)
+AND1(a=na, b=nb)=>(out=nanb)
+AND2(a=a, b=nb)=>(out=anb)
+AND3(a=na, b=b)=>(out=nab)
+AND4(a=a, b=b)=>(out=ab)
+NAND1(a=nanb, b=D0)=>(out=d0)
+NAND2(a=anb, b=D1)=>(out=d1)
+NAND3(a=nab, b=D2)=>(out=d2)
+NAND4(a=ab, b=D3)=>(out=d3)
+AND4(a=d0, b=d1, c=d2, d=d3)=>(out=nresult)
+NOT3(a=nresult)=>(out=result)
+
+@End
+OUTPUT W=result, NW=nresult
