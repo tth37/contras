@@ -10,7 +10,7 @@
 
 ## 发布
 
-empty now..
+[windows_x64](https://github.com/tth37/contras/releases/tag/v1.0)
 
 ## 从源代码编译
 
