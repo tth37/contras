@@ -1,0 +1,25 @@
+import And4 from "And4.cdl"
+import Not from "Not.cdl"
+
+@Head
+NAME DMux3Way8
+INPUT a, b, c, D
+OUTPUT Y7, Y6, Y5, Y4, Y3, Y2, Y1, Y0
+SYMBOL And4 And41, And42, And43, And44, And45, And46, And47, And48
+SYMBOL Not Not1, Not2, Not3
+
+@Body
+Not1(a=a)=>(out=na)
+Not2(a=b)=>(out=nb)
+Not2(a=c)=>(out=nc)
+And41(a[0]=D, a[1]=na, a[2]=nb, a[3]=nc)=>(out=result0)
+And42(a[0]=D, a[1]=na, a[2]=nb, a[3]=c)=>(out=result1)
+And43(a[0]=D, a[1]=na, a[2]=b, a[3]=nc)=>(out=result2)
+And44(a[0]=D, a[1]=na, a[2]=b, a[3]=c)=>(out=result3)
+And45(a[0]=D, a[1]=a, a[2]=nb, a[3]=nc)=>(out=result4)
+And46(a[0]=D, a[1]=a, a[2]=nb, a[3]=c)=>(out=result5)
+And47(a[0]=D, a[1]=a, a[2]=b, a[3]=nc)=>(out=result6)
+And48(a[0]=D, a[1]=a, a[2]=b, a[3]=c)=>(out=result7)
+
+@End
+OUTPUT Y0=result0,Y1=result1, Y2=result2, Y3=result3, Y4=result4, Y5=result5, Y6=result6, Y7=result7
