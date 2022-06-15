@@ -1,0 +1,4 @@
+@Case
+a = 01
+out = ?
+@End

@@ -1,0 +1,23 @@
+import And from "And.cdl"
+import Or from "Or.cdl"
+import Not from "Not.cdl"
+
+@Head
+NAME Xor
+INPUT a, b
+OUTPUT out
+SYMBOL And And1, And2
+SYMBOL Or Or1
+SYMBOL Not Not1, Not2
+
+@Body
+Not1(a = a) => (out = na)
+Not2(a = b) => (out = nb)
+And1(a = a, b = nb) => (out = anb)
+And2(a = na, b = b) => (out = bna)
+Or1(a = anb, b = bna) => (out = res)
+
+@End
+OUTPUT out = res
+
+# .\contras.exe .\Xor.cdl .\test\Xor.in .\test\Xor.out

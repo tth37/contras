@@ -15,9 +15,10 @@ void contras::compiler::dfs_build_description_tree(
     __CONTRAS_THROW(exception_type::invalid_argument, "Symbol name of [" + desc->file_name + "] is empty");
   }
   if (symbol_name_set.find(desc->symbol_name) != symbol_name_set.end()) {
-    __CONTRAS_THROW(exception_type::invalid_argument, "Symbol name [" +
-                                                           desc->symbol_name +
-                                                           "] already exists");
+    // __CONTRAS_THROW(exception_type::invalid_argument, "Symbol name [" +
+    //                                                        desc->symbol_name +
+    //                                                        "] already exists");
+    return;
   }
   symbol_name_set.insert(desc->symbol_name);
   if (file_name_set.find(desc->file_name) != file_name_set.end()) {

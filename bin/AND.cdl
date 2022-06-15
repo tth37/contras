@@ -1,12 +1,17 @@
 import Not from "Not.cdl"
+
 @Head
 NAME And
 INPUT a, b
 OUTPUT out
-SYMBOL NAND NAND1
+SYMBOL NAND Nand1
 SYMBOL Not Not1
+
 @Body
-NAND1(a = a, b = b) => (out = nab)
-Not1(a = nab) => (out = ab)
+Nand1(a = a, b = b) => (out = nab)
+Not1(a = nab) => (out = res)
+
 @End
-OUTPUT out = ab
+OUTPUT out = res
+
+# .\contras.exe .\And.cdl .\test\And.in .\test\And.out

@@ -2,8 +2,12 @@
 NAME Not
 INPUT a
 OUTPUT out
-SYMBOL NAND NAND1
+SYMBOL NAND Nand1
+
 @Body
-NAND1(a = a, b = a) => (out = na)
+Nand1(a = a, b = a) => (out = res)
+
 @End
-OUTPUT out = na
+OUTPUT out = res
+
+# .\contras.exe .\Not.cdl .\test\Not.in .\test\Not.out

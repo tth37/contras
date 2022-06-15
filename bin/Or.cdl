@@ -1,0 +1,18 @@
+import Not from "Not.cdl"
+
+@Head
+NAME Or
+INPUT a, b
+OUTPUT out
+SYMBOL NAND Nand1
+SYMBOL Not Not1, Not2
+
+@Body
+Not1(a = a) => (out = na)
+Not2(a = b) => (out = nb)
+Nand1(a = na, b = nb) => (out = res)
+
+@End
+OUTPUT out = res
+
+# .\contras.exe .\Or.cdl .\test\Or.in .\test\Or.out

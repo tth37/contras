@@ -79,7 +79,6 @@ contras::runtime_instance_normal::runtime_instance_normal(
   for (const auto &pin : scoped_pins) {
     pin_map.insert(std::make_pair(pin.name, pin));
   }
-  int a = 3 + 3; // why not have a look?
 }
 
 void contras::runtime_instance_normal::clear() {
@@ -145,7 +144,6 @@ void contras::runtime_instance_normal::execute() {
       tgt_pin.assign_value(src_pin, clause.clause);
     }
   }
-  int a = 3 + 3;
 }
 
 void contras::runtime_instance_normal::set_input_pin(
