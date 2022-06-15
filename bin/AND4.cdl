@@ -1,12 +1,12 @@
-import AND from "AND.cdl"
+import And from  And.cdl"
 @Head
-NAME AND4
+NAME And4
 INPUT a[3:0]
 OUTPUT out
-SYMBOL AND AND1, AND2, AND3
-@Body
-AND1(a = a[0], b = a[1]) => (out = a01)
-AND2(a = a[2], b = a[3]) => (out = a23)
-AND3(a = a01, b = a23) => (out = a0123)
+SYMBOL And1, And2, And3
+@Body 
+And1(a = a[0], b = a[1]) => (out = a01)
+And2(a = a[2], b = a[3]) => (out = a23) 
+And3(a = a01, b = a23) => (out = a0123)
 @End
 OUTPUT out = a0123
