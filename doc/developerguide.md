@@ -9,3 +9,7 @@ $ git clone https://github.com/tth37/contras.git
 使用 Visual Studio 来打开项目文件夹。在 `src` 文件夹中找到 `main.cpp`，并且点击运行按钮。
 
 若要添加 CDL 源文件以及输入文件，在 `out` 文件夹中找到 `contras.exe`。在其同级的目录下添加 CDL 源文件以及输入文件。
+
+[Git](https://git-scm.com/)
+
+[CMake](https://cmake.org/)
